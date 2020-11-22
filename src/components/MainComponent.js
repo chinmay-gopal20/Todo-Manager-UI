@@ -5,7 +5,9 @@ import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 
 import LogIn  from "./LogInComponent";
 import SignUp from "./SignUpComponent"
-import Header from "./HeaderComponent";
+import UserPage from "./UserComponent";
+// import Header from "./HeaderComponent";
+// import Home from "./HomeComponent";
 
 class Main extends React.Component{
     constructor(){
@@ -21,13 +23,21 @@ class Main extends React.Component{
             return <LogIn />
         }
 
+        const User = ({match}) => {
+            return <UserPage userId={match.params.userId} />
+        }
+        
+        // const HomePage = () => {
+        //     return <Home />
+        // }
+
         return(
             <div >
-                <Header />
                 <Switch>
                     <Route path='/home' component={Signup} />
                     <Route path='/login' component={Login} />
                     <Route path='/signup' component={Signup} />
+                    <Route path='/todo-manager/user/:userId' component={User} />
                     <Redirect to='/home' />
                 </Switch>
             </div>

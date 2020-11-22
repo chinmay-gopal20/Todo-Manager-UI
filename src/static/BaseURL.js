@@ -1,0 +1,1 @@
+export const BaseUrl = 'https://todo-manager-backend.herokuapp.com/';
