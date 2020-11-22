@@ -29,7 +29,7 @@ class LogIn extends React.Component{
         return(
             <Container >
                 <Row >
-                    <Col style={{display: "flex", justifyContent: "center", height: "60vh", alignItems: "center", margin: "0 auto"}}>
+                    <Col style={{display: "flex", justifyContent: "center", height: "40vh", alignItems: "center", margin: "0 auto"}}>
                         <Form onChange={this.handleChange}>
                             <h2 className="text-center"><b>Login</b></h2> <hr/>
                             <FormGroup  className="text-left">
