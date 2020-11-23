@@ -6,6 +6,7 @@ import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import LogIn  from "./LogInComponent";
 import SignUp from "./SignUpComponent"
 import UserPage from "./UserComponent";
+import ModalForm  from "./FormComponent";
 // import Header from "./HeaderComponent";
 // import Home from "./HomeComponent";
 
@@ -26,6 +27,10 @@ class Main extends React.Component{
         const User = ({match}) => {
             return <UserPage userId={match.params.userId} />
         }
+
+        const Modal = () => {
+            return <ModalForm />
+        }
         
         // const HomePage = () => {
         //     return <Home />
@@ -34,6 +39,7 @@ class Main extends React.Component{
         return(
             <div >
                 <Switch>
+                    {/* <Route path='/home' component={ModalForm} /> */}
                     <Route path='/home' component={Signup} />
                     <Route path='/login' component={Login} />
                     <Route path='/signup' component={Signup} />

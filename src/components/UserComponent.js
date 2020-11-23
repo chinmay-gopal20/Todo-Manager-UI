@@ -4,6 +4,8 @@ import { Navbar, Nav, NavbarBrand, NavItem, Button, Container, Row, Col, Card, C
 import { BaseUrl } from "../static/BaseURL";
 import logo from '../todo_logo.png'; 
 
+import ModalForm from "./FormComponent";
+
 function RenderTaskHeaderCard(){
     return(
         <Card className="task-header-card" >
@@ -30,8 +32,6 @@ function RenderTaskHeaderCard(){
     )
 }
 
-
-
 async function getAllTasks(userId){
     const url = BaseUrl + '/user/' + userId + '/tasks';
     console.log('url - ', url);
@@ -46,19 +46,28 @@ class UserPage extends React.Component{
         this.state = {
             userId: props.userId,
             todo: null,
-
+            
+            isNewFormModalOpen: false,
             isEditFormModalOpen: false,
         };
 
         this.RenderTaskCard = this.RenderTaskCard.bind(this);
         this.toggleDisplayModal = this.toggleDisplayModal.bind(this);
         this.toggleEditFormModal = this.toggleEditFormModal.bind(this);
+        this.toggleNewFormModal = this.toggleNewFormModal.bind(this);
     }
 
+    task_details = {
+        task: '',
+        due_date: '',
+        priority: '',
+        category: '',
+        last_modified: '',
+        created_date: ''
+    };
+
     //Modal to display contact details
-    toggleDisplayModal(firstname, lastname){
-        this.contact.firstname = firstname;
-        //this.contact.lastname = lastname;
+    toggleDisplayModal(){
         this.setState({
             isViewModalOpen: !this.state.isViewModalOpen
         });
@@ -70,6 +79,14 @@ class UserPage extends React.Component{
         this.setState({
             isEditFormModalOpen: !this.state.isEditFormModalOpen
         });
+    }
+
+    //Modal to add new task
+    toggleNewFormModal(){
+        this.setState({
+            isNewFormModalOpen: !this.state.isNewFormModalOpen
+        });
+        console.log('is new form modal open - ', this.state.isNewFormModalOpen)
     }
 
     componentDidMount(){
@@ -131,7 +148,8 @@ class UserPage extends React.Component{
                     <Nav className="ml-auto" navbar>
                         <NavItem>
                             <Link to="/home">
-                                <Button style={{width: "100px", fontSize: 17, backgroundColor: "black", fontFamily: "iowan old style",}}>
+                                <Button style={{width: "100px", fontSize: 17, backgroundColor: "black", 
+                                        fontFamily: "iowan old style"}}>
                                     <span className="fa fa-sign-in fa-lg" style={{color: "white"}}/>{'  '}Logout
                                 </Button>
                             </Link>
@@ -140,20 +158,30 @@ class UserPage extends React.Component{
                 </Navbar>
                 <Container className="todo-title-container" style={{"justifyContent": "center"}}>
                     <Row>
-                        <Col style={{display: "flex", justifyContent: "center", height: "15vh", alignItems: "center", margin: "0 auto"}}>
+                        <Col style={{display: "flex", justifyContent: "center", height: "15vh", 
+                            alignItems: "center", margin: "0 auto"}}>
                             <h1>To-Do List</h1>
                         </Col>
                     </Row>
                 </Container>
-                <Row style={{'display': 'flex', 'flexDirection': 'row', 'flexWrap': 'wrap', justifyContent: "center", alignItems: "center"}}>
+                <div>
+                    <Button onClick={this.toggleNewFormModal} 
+                        style={{backgroundColor: "black", fontSize: 17, fontFamily: "iowan old style"}}> 
+                        <span className="fa fa-plus fa-lg" style={{color: "white"}}></span>
+                        Add Task
+                    </Button>
+                </div>
+                <Row style={{'display': 'flex', 'flexDirection': 'row', 'flexWrap': 'wrap', 
+                        justifyContent: "center", alignItems: "center"}}>
                     <Col md={7}  key='task-header-card' style={{paddingBottom: "10px", paddingTop: "10px"}}>
                         <RenderTaskHeaderCard />
                     </Col>
                 </Row>
-                <Row style={{'display': 'flex', 'flexDirection': 'row', 'flexWrap': 'wrap', justifyContent: "center", alignItems: "center"}}>
+                <Row style={{'display': 'flex', 'flexDirection': 'row', 'flexWrap': 'wrap', 
+                        justifyContent: "center", alignItems: "center"}}>
                     {TaskCard}
                 </Row>
-                {/* {this.state.isEditFormModalOpen ? <Form isNew="false"/> : null} */}
+                {this.state.isNewFormModalOpen ? <ModalForm userId={this.state.userId}/>: null}
             </React.Fragment>
         )
     }
