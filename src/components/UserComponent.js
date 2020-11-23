@@ -145,12 +145,11 @@ class UserPage extends React.Component{
                         </Col>
                     </Row>
                 </Container>
-                {this.state.todo ? 
                 <Row style={{'display': 'flex', 'flexDirection': 'row', 'flexWrap': 'wrap', justifyContent: "center", alignItems: "center"}}>
                     <Col md={7}  key='task-header-card' style={{paddingBottom: "10px", paddingTop: "10px"}}>
                         <RenderTaskHeaderCard />
                     </Col>
-                </Row> : null}
+                </Row>
                 <Row style={{'display': 'flex', 'flexDirection': 'row', 'flexWrap': 'wrap', justifyContent: "center", alignItems: "center"}}>
                     {TaskCard}
                 </Row>
