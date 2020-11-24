@@ -36,7 +36,7 @@ class LogIn extends React.Component{
         fetch(url)
             .then(response => response)
             .then(response => {
-                if(response.ok || response.status == 401){
+                if(response.ok || response.status === 401){
                     return response;
                 }
                 else{

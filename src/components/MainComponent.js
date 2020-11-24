@@ -1,19 +1,12 @@
 import React from "react";
-import { Container, Row } from "reactstrap";
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 
 
 import LogIn  from "./LogInComponent";
 import SignUp from "./SignUpComponent"
 import UserPage from "./UserComponent";
-import ModalForm  from "./FormComponent";
-// import Header from "./HeaderComponent";
-// import Home from "./HomeComponent";
 
 class Main extends React.Component{
-    constructor(){
-        super();
-    }
     render(){
 
         const Signup = () => {
@@ -28,13 +21,6 @@ class Main extends React.Component{
             return <UserPage userId={match.params.userId} />
         }
 
-        const Modal = () => {
-            return <ModalForm />
-        }
-        
-        // const HomePage = () => {
-        //     return <Home />
-        // }
 
         return(
             <div >

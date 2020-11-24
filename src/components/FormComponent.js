@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 async function addTask(userId, data){
     const url = BaseUrl + 'user/' + userId + '/tasks';
     console.log('add task url - ', url);
+    console.log('add task request-body - ', data);
 
     const response = await fetch(url, {
             method: 'POST',
@@ -104,25 +105,47 @@ class ModalForm extends React.Component{
     }
 
     getUpdatedTaskDate(){
-        return{
-            "task": this.state.task,
-                    "priority": this.state.priority,
-                    "category": this.state.category,
-                    "due_date": this.state.dueDate.toString()
-        }
+        var updatedTaskDetails = {}
+        
+        updatedTaskDetails['task'] = this.state.task;
+        updatedTaskDetails['priority'] = this.state.priority;
+        updatedTaskDetails['category'] = this.state.category;
+        updatedTaskDetails['due_date'] = this.state.dueDate.toString();
+
+        return updatedTaskDetails;
+        // return{
+        //     "task": this.state.task,
+        //     "priority": this.state.priority,
+        //     "category": this.state.category,
+        //     "due_date": this.state.dueDate.toString()
+        // }
     }
 
     getNewTaskData(){
-        return {
-            "todo":[
-                {
-                    "task": this.state.task,
-                    "priority": this.state.priority,
-                    "category": this.state.category,
-                    "due_date": this.state.dueDate.toString()
-                }
-            ]
-        }
+
+        var taskDetails = {}
+        taskDetails['todo'] = []
+        var todo = {}
+        todo['task'] = this.state.task;
+        todo['priority'] = this.state.priority;
+        todo['category'] = this.state.category;
+        todo['due_date'] = this.state.dueDate.toString();
+
+        taskDetails['todo'].push(todo);
+
+        return taskDetails;
+
+
+        // return {
+        //     "todo":[
+        //         {
+        //             "task": this.state.task,
+        //             "priority": this.state.priority,
+        //             "category": this.state.category,
+        //             "due_date": this.state.dueDate.toString()
+        //         }
+        //     ]
+        // }
     }
 
     handleChange(event){
@@ -133,12 +156,9 @@ class ModalForm extends React.Component{
         this.setState({
             [name]: value
         })
-
-        console.log(name, value);
     }
 
     handleDateChange(date){
-        console.log('date change')
         this.setState({
             dueDate: date
         })
@@ -188,7 +208,6 @@ class ModalForm extends React.Component{
                 if(response.ok){
                     return response;
                 }else{
-                    console.log('err response - ', response.json())
                     var error = new Error('Error ' + response.status + ' - ' + response.statusText);
                     error.message = response
                     // console.log('error - ', error)
@@ -236,7 +255,7 @@ class ModalForm extends React.Component{
     handleDeleteAllFormSubmit(event){
         event.preventDefault();
         this.toggleModal()
-        deleteTask(this.state.userId, this.state.taskId)
+        deleteAllTask(this.state.userId)
             .then(response => response)
             .then(response => {
                 if(response.ok){

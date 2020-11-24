@@ -5,10 +5,6 @@ import { Link } from "react-router-dom";
 import "../App.css"
 
 class Header extends React.Component{
-    constructor(){
-        super();
-    }
-
     render(){
         return(
             <div class='header-container'>
