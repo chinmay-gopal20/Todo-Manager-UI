@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Navbar, Nav, NavbarBrand, NavItem, Button, Container, Row, Col, Card, CardBody} from 'reactstrap';
 import { BaseUrl } from "../static/BaseURL";
 import logo from '../todo_logo.png'; 
+import moment from "moment";
 
 import ModalForm from "./FormComponent";
 
@@ -11,7 +12,7 @@ function RenderTaskHeaderCard(){
         <Card className="task-header-card" >
             <CardBody>
                     <div className="row">  
-                        <div className="col-4"> 
+                        <div className="col-3"> 
                            <b>Task</b>
                         </div>
                         <div className="col-2"> 
@@ -20,11 +21,14 @@ function RenderTaskHeaderCard(){
                         <div className="col-2"> 
                             <b>Priority</b>
                         </div>
-                        <div className="col-2"> 
+                        <div className="col-1"> 
                             <b>Edit</b>
                         </div>
                         <div className="col-2">
                             <b>Delete</b>
+                        </div>
+                        <div className="col-2">
+                            <b>Task Info</b>
                         </div>
                     </div>
             </CardBody>
@@ -46,38 +50,63 @@ class UserPage extends React.Component{
         this.state = {
             userId: props.userId,
             todo: null,
+            clickedTaskDetails: null,
             
+            isViewModalOpen: false,
             isNewFormModalOpen: false,
             isEditFormModalOpen: false,
+            isDeleteFormModalOpen: false,
+            isDeleteAllFormModalOpen: false,
         };
 
         this.RenderTaskCard = this.RenderTaskCard.bind(this);
         this.toggleDisplayModal = this.toggleDisplayModal.bind(this);
         this.toggleEditFormModal = this.toggleEditFormModal.bind(this);
         this.toggleNewFormModal = this.toggleNewFormModal.bind(this);
+        this.toggleDeleteFormModal = this.toggleDeleteFormModal.bind(this);
+        this.toggleDeleteAllFormModal = this.toggleDeleteAllFormModal.bind(this);
     }
 
-    task_details = {
-        task: '',
-        due_date: '',
-        priority: '',
-        category: '',
-        last_modified: '',
-        created_date: ''
-    };
+    getDefaultTaskDetails(){
+        return {
+            userId: this.state.userId,
+            taskId: '',
+            task: '',
+            dueDate: new Date(),
+            priority: '',
+            category: '',
+            lastModifiedDate: new Date(),
+            createdDate: new Date()
+        };
+    }
 
-    //Modal to display contact details
-    toggleDisplayModal(){
+    setTaskDetails(task){
+        return {
+            userId: this.state.userId,
+            taskId: task.task_id,
+            task: task.task,
+            dueDate: moment(task.due_date).toDate(),
+            priority: task.priority,
+            category: task.category,
+            lastModifiedDate: moment(task.last_modified).toDate(),
+            createdDate: moment(task.created_date).toDate()
+        }
+
+    }
+
+    //Modal to display task details
+    toggleDisplayModal(task){
         this.setState({
-            isViewModalOpen: !this.state.isViewModalOpen
+            isViewModalOpen: !this.state.isViewModalOpen,
+            clickedTaskDetails: task
         });
     }
 
     //Editable form with filled values
-    toggleEditFormModal(){
-        console.log('Inside form modal')
+    toggleEditFormModal(task){
         this.setState({
-            isEditFormModalOpen: !this.state.isEditFormModalOpen
+            isEditFormModalOpen: !this.state.isEditFormModalOpen,
+            clickedTaskDetails: task
         });
     }
 
@@ -86,7 +115,20 @@ class UserPage extends React.Component{
         this.setState({
             isNewFormModalOpen: !this.state.isNewFormModalOpen
         });
-        console.log('is new form modal open - ', this.state.isNewFormModalOpen)
+    }
+
+    // Modal to delete task
+    toggleDeleteFormModal(task){
+        this.setState({
+            isDeleteFormModalOpen: !this.state.isDeleteFormModalOpen,
+            clickedTaskDetails: task
+        });
+    }
+
+    toggleDeleteAllFormModal(){
+        this.setState({
+            isDeleteAllFormModalOpen: !this.state.isDeleteAllFormModalOpen
+        })
     }
 
     componentDidMount(){
@@ -102,24 +144,30 @@ class UserPage extends React.Component{
 
     RenderTaskCard({task}){
         return(
-            <Card key={task.task_id} className="task-card" >
+            <Card key={task.task_id} className="task-card">
                 <CardBody>
-                        <div className="row">  
-                            <div className="col-4"> 
-                               {task.task} 
+                        <div className="row"> 
+                            <div className="col-3"> 
+                               {task.task}
                             </div>
                             <div className="col-2"> 
                                 {task.due_date.slice(0, -8)} 
                             </div>
                             <div className="col-2"> 
-                                {task['priority']} 
+                                {task.priority} 
                             </div>
-                            <div className="col-2"> 
-                                <span className="fa fa-pencil-square-o" onClick={this.toggleEditFormModal}/> 
+                            <div className="col-1"> 
+                                <span style={{cursor: 'pointer'}} className="fa fa-pencil-square-o" 
+                                    onClick={() => this.toggleEditFormModal(task)}/> 
                             </div>
                             <div className="col-2">
-                                <span className="fa fa-trash"> </span> 
+                                <span style={{cursor: 'pointer'}} className="fa fa-trash"
+                                    onClick={() => this.toggleDeleteFormModal(task)}> </span> 
                             </div>
+                            <div className="col-2">
+                                <span style={{cursor: 'pointer'}} className="fa fa-info-circle" 
+                                        onClick={() => this.toggleDisplayModal(task)}> </span> 
+                            </div> 
                         </div>
                 </CardBody>
             </Card>
@@ -164,12 +212,21 @@ class UserPage extends React.Component{
                         </Col>
                     </Row>
                 </Container>
-                <div>
-                    <Button onClick={this.toggleNewFormModal} 
-                        style={{backgroundColor: "black", fontSize: 17, fontFamily: "iowan old style"}}> 
-                        <span className="fa fa-plus fa-lg" style={{color: "white"}}></span>
-                        Add Task
-                    </Button>
+                <div className="row" style={{alignItems: "center", justifyContent: "center"}}>
+                    <div className="col-3">
+                        <Button onClick={this.toggleNewFormModal} 
+                            style={{backgroundColor: "black", fontSize: 17, fontFamily: "iowan old style"}}> 
+                            <span className="fa fa-plus fa-lg" style={{color: "white"}}></span>
+                            Add Task
+                        </Button>
+                    </div>
+                    <div className="col-3">
+                        <Button onClick={this.toggleDeleteAllFormModal} 
+                            style={{backgroundColor: "black", fontSize: 17, fontFamily: "iowan old style"}}> 
+                            <span className="fa fa-trash fa-lg" style={{color: "white"}}></span>
+                            Delete all Task
+                        </Button>
+                    </div>
                 </div>
                 <Row style={{'display': 'flex', 'flexDirection': 'row', 'flexWrap': 'wrap', 
                         justifyContent: "center", alignItems: "center"}}>
@@ -181,12 +238,34 @@ class UserPage extends React.Component{
                         justifyContent: "center", alignItems: "center"}}>
                     {TaskCard}
                 </Row>
-                {this.state.isNewFormModalOpen ? <ModalForm userId={this.state.userId}/>: null}
+                
+                {this.state.isNewFormModalOpen ? 
+                    <ModalForm taskDetails={this.getDefaultTaskDetails()}/> : 
+                    null
+                }
+                
+                {this.state.isEditFormModalOpen ? 
+                    <ModalForm taskDetails={this.setTaskDetails(this.state.clickedTaskDetails)} isEditForm={true}/> : 
+                    null
+                }
+                
+                {this.state.isViewModalOpen ? 
+                    <ModalForm taskDetails={this.setTaskDetails(this.state.clickedTaskDetails)} isViewForm={true}/> :
+                    null
+                }
+
+                {this.state.isDeleteFormModalOpen ? 
+                    <ModalForm taskDetails={this.setTaskDetails(this.state.clickedTaskDetails)} isDeleteForm={true}/> :
+                    null
+                }
+
+                {this.state.isDeleteAllFormModalOpen ? 
+                    <ModalForm taskDetails={{'userId': this.state.userId}} isDeleteAllForm={true}/> :
+                    null
+                }
             </React.Fragment>
         )
     }
 }
 
 export default UserPage;
-
-// style={{height: "15vh", justifyContent: "right", alignItems: "center", display: "flex", margin: "50"}}
