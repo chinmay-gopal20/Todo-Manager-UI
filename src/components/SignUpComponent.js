@@ -10,7 +10,7 @@ class SignUp extends React.Component{
 
         this.state = {
             fields: {
-                fristname: '',
+                firstname: '',
                 lastname: '',
                 email: '',
                 password: '',
@@ -43,14 +43,14 @@ class SignUp extends React.Component{
     submitSignUpForm(event) {
         event.preventDefault();
         if (this.validateForm()) {
-            let fields = {};
-            fields['firstname'] = '';
-            fields['lastname'] = '';
-            fields['email'] = '';
-            fields['password'] = '';
-            this.setState({
-                fields: fields
-            });         
+            // let fields = {};
+            // fields['firstname'] = '';
+            // fields['lastname'] = '';
+            // fields['email'] = '';
+            // fields['password'] = '';
+            // this.setState({
+            //     fields: fields
+            // });         
 
             const url = BaseUrl + "/user";
             fetch(url, {
@@ -75,6 +75,7 @@ class SignUp extends React.Component{
                 })
                 .then(response => response.json())
                 .then(response => {
+                    alert('Signed up successfully.')
                     console.log('response - ', response);
                     if (response['user id']){
                         this.setState({

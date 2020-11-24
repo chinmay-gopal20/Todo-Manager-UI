@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 async function addTask(userId, data){
     const url = BaseUrl + 'user/' + userId + '/tasks';
     console.log('add task url - ', url);
-    console.log('add task request-body - ', data);
+    console.log('add task request-body - ',data);
 
     const response = await fetch(url, {
             method: 'POST',
@@ -106,7 +106,7 @@ class ModalForm extends React.Component{
 
     getUpdatedTaskDate(){
         var updatedTaskDetails = {}
-        
+
         updatedTaskDetails['task'] = this.state.task;
         updatedTaskDetails['priority'] = this.state.priority;
         updatedTaskDetails['category'] = this.state.category;
@@ -175,6 +175,7 @@ class ModalForm extends React.Component{
             if(response.ok){
                 return response;
             }else{
+                console.log('response-', response.json())
                 var error = new Error('Error ' + response.status + ' - ' + response.statusText);
                 error.message = response
                 throw error;
