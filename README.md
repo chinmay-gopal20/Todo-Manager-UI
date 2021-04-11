@@ -1,6 +1,6 @@
 # ToDo Manager
 
-ToDo Manager is a kind of app that generally used to stay organised and manage your day to day. ToDo Manager enables users to add task, edit and delete their Tasks.
+ToDo Manager is a kind of app that generally helps you to stay organised and manage your day to day. ToDo Manager enables users to add task, edit and delete their Tasks.
 
 To use app at online - [ToDo Manager](https://todo-manager-frontend.herokuapp.com/home)
 
